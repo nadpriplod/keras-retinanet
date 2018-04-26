@@ -118,8 +118,10 @@ def anchors_for_shape(
     if strides is None:
         strides = [2 ** x for x in pyramid_levels]
     if sizes is None:
-        sizes = [2 ** (x + 2) for x in pyramid_levels]
+        #sizes = [2 ** (x + 2) for x in pyramid_levels]
+        sizes = [16, 32, 64, 128, 256]
     if ratios is None:
+        #ratios = np.array([0.33, 1, 3])
         ratios = np.array([0.5, 1, 2])
     if scales is None:
         scales = np.array([2 ** 0, 2 ** (1.0 / 3.0), 2 ** (2.0 / 3.0)])
