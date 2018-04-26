@@ -162,10 +162,8 @@ def __create_pyramid_features(C2, C3, C4, C5, feature_size=256):
     P2 = keras.layers.Add(name='P2_merged')([P3_upsampled, P2])
     P2 = keras.layers.Conv2D(feature_size, kernel_size=3, strides=1, padding='same', name='P2')(P2)
 
-    # "P6 is obtained via a 3x3 stride-2 conv on C5"
-    P6 = keras.layers.Conv2D(feature_size, kernel_size=3, strides=2, padding='same', name='P6')(C5)
 
-    return [P2, P3, P4, P5, P6]
+    return [P2, P3, P4, P5]
 
 
 class AnchorParameters:
@@ -190,8 +188,8 @@ class AnchorParameters:
 The default anchor parameters.
 """
 AnchorParameters.default = AnchorParameters(
-    sizes   = [16, 32, 64, 128, 256],
-    strides = [4, 8, 16, 32, 64],
+    sizes   = [16, 32, 64, 128],
+    strides = [4, 8, 16, 32],
     ratios  = np.array([0.5, 1, 2], keras.backend.floatx()),
     scales  = np.array([2 ** 0, 2 ** (1.0 / 3.0), 2 ** (2.0 / 3.0)], keras.backend.floatx()),
 )
@@ -347,7 +345,7 @@ def retinanet_bbox(
         model = retinanet(num_anchors=anchor_parameters.num_anchors(), **kwargs)
 
     # compute the anchors
-    features = [model.get_layer(name).output for name in ['P2', 'P3', 'P4', 'P5', 'P6']]
+    features = [model.get_layer(name).output for name in ['P2', 'P3', 'P4', 'P5']]
     anchors  = __build_anchors(anchor_parameters, features)
 
     # we expect the anchors, regression and classification values as first output
